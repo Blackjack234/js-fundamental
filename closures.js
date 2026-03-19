@@ -85,10 +85,9 @@ function find() {
   return function (index) {
     console.log(a[index]);
   };
-  
 }
 
-const closure = find()
+const closure = find();
 console.time("6");
 closure(6);
 console.timeEnd("6");
@@ -98,7 +97,6 @@ closure(12);
 console.timeEnd("12");
 
 // In this example, the find function creates a large array of squared numbers and returns an inner function that can access this array. By using a closure, we avoid having to recompute the squares every time we want to access a specific index, which can significantly improve performance when dealing with large datasets.
-
 
 //question 4 : What are some common use cases for closures in JavaScript?
 
@@ -112,11 +110,9 @@ console.timeEnd("12");
 
 // 4. Memoization: Closures can be used to implement memoization, which is an optimization technique that stores the results of expensive function calls and returns the cached result when the same inputs occur again.
 
-// 5. Module Pattern: Closures are a fundamental part of the module pattern, which allows you to create modules with private and public members, helping to organize code and manage dependencies in larger applications.   
-
+// 5. Module Pattern: Closures are a fundamental part of the module pattern, which allows you to create modules with private and public members, helping to organize code and manage dependencies in larger applications.
 
 //question 5 : Block scope and setTimeOut
-
 
 // When using setTimeout in a loop, it's important to understand how closures and block scope work together. If you use var to declare the loop variable, it will be shared across all iterations of the loop, leading to unexpected behavior. However, if you use let, each iteration will have its own block scope, allowing the setTimeout callback to access the correct value of the loop variable.
 
@@ -132,14 +128,13 @@ for (let j = 0; j < 5; j++) {
   }, 1000);
 }
 
-// In the first loop, using var causes the variable i to be shared across all iterations, so when the setTimeout callbacks execute after the loop has completed, they all reference the same variable i, which has a value of 5. In the second loop, using let creates a new block scope for each iteration, allowing each setTimeout callback to access the correct value of j at the time it was created. 
-
+// In the first loop, using var causes the variable i to be shared across all iterations, so when the setTimeout callbacks execute after the loop has completed, they all reference the same variable i, which has a value of 5. In the second loop, using let creates a new block scope for each iteration, allowing each setTimeout callback to access the correct value of j at the time it was created.
 
 // function a(){
 
 //     function b(j){
 //       setTimeout(function () {
-//         console.log(j); 
+//         console.log(j);
 //       }, 1000);
 //     }
 //     for (var i = 0; i < 5; i++) {
@@ -149,30 +144,96 @@ for (let j = 0; j < 5; j++) {
 
 // a()
 
-
 //Question 6 : how do you use a closure to create a private counter?
 
-function counter1 (){
-    var _counter = 0; // This variable is private to the counter function
+function counter1() {
+  var _counter = 0; // This variable is private to the counter function
 
-    function add (increment){
-      _counter +=increment
-    }
+  function add(increment) {
+    _counter += increment;
+  }
 
-    function retrive(){
-        return "Counter = " + _counter;
-    }
+  function retrive() {
+    return "Counter = " + _counter;
+  }
 
-    return {
-        add,
-        retrive
-    }
+  return {
+    add,
+    retrive,
+  };
 }
-
 
 const a = counter1();
 
 a.add(5);
 
-console.log(a.retrive())
+console.log(a.retrive());
+
+//Question 7 : What is a module pattern.
+
+// The module pattern is a design pattern in JavaScript that allows you to create modules with private and public members. It uses closures to encapsulate data and functions, providing a way to organize code and manage dependencies in larger applications. The module pattern helps to avoid polluting the global namespace and allows for better code organization and maintainability.
+
+var Module = (function () {
+  function privateMethod() {
+    console.log("private module.");
+  }
+  return {
+    PublicMethod: function () {
+      console.log("public module.");
+    },
+  };
+})();
+
+Module.PublicMethod();
+// Module.privateMethod();
+
+// Question 8 : Make this run once.
+
+let view;
+
+function runOnce() {
+  let called = 0;
+
+  if (called > 0) {
+    console.log("Already has been called.");
+  } else {
+    view = "I am a view";
+
+    console.log("this is view ", view);
+
+    called++;
+  }
+}
+
+let IsCAlled = runOnce();
+
+IsCAlled();
+IsCAlled();
+IsCAlled();
+IsCAlled();
+IsCAlled();
+
+
+
+// question 9 : once polifill
+
+function once(func) {
+  let called = false;
+  let result;
+
+  return function (...args) {
+    if (!called) {
+      result = func.apply(this, args);
+      called = true;
+    }
+    return result;
+  };
+}
+
+const initialize = once(function () {
+  console.log("Initialization complete.");
+});
+
+initialize(); // Output: Initialization complete.
+initialize(); // No output, as the function has already been called.
 
