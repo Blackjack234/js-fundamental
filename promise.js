@@ -41,7 +41,7 @@ function importantFunction(userName) {
 function jobFunction(job) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject(`job on ${job}`);
+      resolve(`job on ${job}`);
     }, 500);
   });
 }
@@ -140,6 +140,7 @@ The any function returns a promise that is fulfilled by the first given promise 
 */
 
 // Promise.any([
+
 //   importantFunction("Anirban"),
 //   jobFunction("js"),
 //   techFunction("Nestjs"),
@@ -302,18 +303,116 @@ The any function returns a promise that is fulfilled by the first given promise 
 
 //solve promises Recursively
 
-function promRecurse(funcPromise) {
-  if (funcPromise.length === 0) return;
+// function promRecurse(funcPromise) {
+//   if (funcPromise.length === 0) return;
 
-  const cutomPromise = funcPromise.shift();
+//   const cutomPromise = funcPromise.shift();
 
-  cutomPromise.then((res) => console.log(res)).catch((err) => console.error(err));
+//   cutomPromise.then((res) => console.log(res)).catch((err) => console.error(err));
 
-  promRecurse(funcPromise)
-}
+//   promRecurse(funcPromise)
+// }
 
-promRecurse([
-  importantFunction("anirban"),
-  jobFunction("js"),
-  techFunction("nestjs"),
-]);
+// promRecurse([
+//   importantFunction("anirban"),
+//   jobFunction("js"),
+//   techFunction("nestjs"),
+// ]);
+
+// function PromisePolyFill(executor) {
+//   let onResolve;
+//   let onReject;
+
+//   let isFulfilled = false;
+//   let isRejected = false;
+//   let isCalled = false;
+
+//   let val;
+
+//   function resolve(value) {
+//     isFulfilled = true;
+//     val = value;
+//     if (typeof onResolve === "function") {
+//       onResolve(value);
+//       isCalled = true;
+//     }
+//   }
+
+//   function reject(value) {
+//     isRejected = true;
+//     val = value;
+
+//     if (typeof onReject === "function") {
+//       isCalled = true;
+//       onReject(val);
+//     }
+//   }
+
+//   this.then = function (cb) {
+//     onResolve = cb;
+//     if (isFulfilled && !isCalled) {
+//       called = true;
+//       onResolve(val);
+//     }
+//     return this;
+//   };
+
+//   this.catch = function (cb) {
+//     onReject = cb;
+//     if (isRejected && !isCalled) {
+//       called = true;
+//       onReject(val);
+//     }
+//     return this;
+//   };
+//   try {
+//     executor(resolve, reject);
+//   } catch (error) {
+//     reject(error);
+//   }
+// }
+
+// const exampleExecutor = new PromisePolyFill((resolve, reject) => {
+//   // setTimeout(()=>{
+//   reject(2);
+//   // },1000)
+// });
+
+// exampleExecutor
+//   .then((res) => {
+//     console.log(res);
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+
+Promise.allPolyfill = (promises) => {
+  return new Promise((resolve, reject) => {
+    let results = [];
+
+    if (!promises.length) {
+      resolve(promises);
+      return;
+    }
+
+    let pending = promises.length;
+
+    promises.forEach((promise, idx) => {
+      Promise.resolve(promise).then((res) => {
+        results[idx] = res;
+        pending--;
+
+        if (pending === 0) {
+          resolve(results);
+        }
+      }, reject);
+    });
+  });
+};
+
+
+  Promise.allPolyfill([
+    importantFunction("Anirban"),
+    jobFunction("js"),
+    techFunction("nestjs"),
+  ]).then((res)=>console.log(res));
