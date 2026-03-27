@@ -170,7 +170,65 @@ fu()
 
 // once an object is bind to the object it will always bind to that object , bind chaining does not happed
 
+const car1 = {
+  color:"Red",
+  company: "Lanborgini"
+}
 
+function purchaseCar(currency,price){
+
+  console.log(
+  `I have purchese ${this.color} - ${this.company} car for ${currency}${price}`
+  )
+
+}
+
+//polifil for call,apply,bind
+
+// Function.prototype.myCall = function (context = {},...args){
+//   if(typeof this !== "function"){
+//     throw new Error(this + "It's not callable.")
+//   }
+
+//   context.fn = this
+//   context.fn(...args)
+// }
+
+// purchaseCar.myCall(car1,"Rupee",5000000)
+
+
+// Function.prototype.myApply = function (context = {}, args = []){
+//    if(typeof this !== "function"){
+//      throw new Error(this + "It's not callable")
+//    }
+
+//   if(!Array.isArray(args)){
+//      throw new TypeError("CreateListfromArrayLike called on non-object")
+//   }
+
+//   constext.fn = this
+//   context.fn(...agrs)
+// }
+
+// purchaseCar.myApply(car1,["R" , 5000000])
+
+// Function.prototype.myBind = function (context = {},...args){
+//    if(typeof this !== "function"){
+//      throw new Error(this + "Can not be bound as it's not callable.")
+//    }
+
+//   context.fn = this;
+
+//   return function (...newArg) {
+//     return context.fn(...args,...newArg)
+//   }
+
+// }
+
+// let newFunc = purchaseCar.myBind(car1,"Rupee")
+
+// console.log(newFunc(5000000))
+ 
 
 
 
